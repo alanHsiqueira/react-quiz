@@ -94,7 +94,7 @@ function App() {
                 alt="bandeira"
                 className="w-32 h-20 object-contain rounded"
               />
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2  gap-3 md:gap-6 ">
                 {questions[currentIndex].options.map((option, i) => (
                   <ButtonOptions
                     key={i}
@@ -108,7 +108,7 @@ function App() {
               </div>
             </>
           )}
-            <div className="flex justify-between my-4 gap-28 w-full ">
+            <div className="flex justify-between my-4  w-full ">
           <ButtonNextPrev content="Prev" onClick={() => handlePrevQuestion()} disabled={currentIndex === 0} />
           <ButtonNextPrev content="Next" onClick={() => handleNextQuestion()} disabled={currentIndex === questions.length - 1}/>
         </div>

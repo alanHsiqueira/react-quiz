@@ -21,7 +21,7 @@ const ButtonOptions = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-xl py-5 px-16 text-xl ${bgColor}`}
+      className={` text-center w-full rounded-xl py-3 md:py-5 px-5 md:px-10 md:text-lg text-sm ${bgColor} break-words whitespace-normal`}
     >
       {content}
     </button>

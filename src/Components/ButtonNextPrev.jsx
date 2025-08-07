@@ -5,7 +5,7 @@ const ButtonNextPrev = ({ content, onClick, disabled }) => {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`px-6 py-2 rounded-xl font-semibold text-white ${
+      className={` px-3 py-1 md:px-6 md:py-2 rounded-xl font-semibold text-white ${
         disabled
           ? "bg-gray-500 cursor-not-allowed"
           : "bg-pink-600 hover:bg-pink-700"
