@@ -1,6 +1,6 @@
 import React from "react";
 
-const Button = ({ content, onClick, isActive, isAnswered, isWrong }) => {
+const ButtonNumbers = ({ content, onClick, isActive, isAnswered, isWrong }) => {
   let classes = " w-10 h-10 rounded-full font-bold";
   if (isActive) classes += " bg-pink-500";
   else if (isWrong) classes += " bg-red-500";
@@ -13,4 +13,4 @@ const Button = ({ content, onClick, isActive, isAnswered, isWrong }) => {
   );
 };
 
-export default Button;
+export default ButtonNumbers;

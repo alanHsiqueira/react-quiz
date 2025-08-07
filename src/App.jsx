@@ -1,8 +1,9 @@
 import React from "react";
-import Button from "./Components/ButtonNumbers";
+import ButtonNumbers from "./Components/ButtonNumbers";
 import ButtonOptions from "./Components/ButtonOptions";
 import { getRandomOptions, shuffleArray } from "./utils/helpers";
 import Congratulations from "./Components/Congratulations";
+import ButtonNextPrev from "./Components/ButtonNextPrev";
 function App() {
   const [questions, setQuestions] = React.useState([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -44,6 +45,17 @@ function App() {
     window.location.reload();
   }
 
+  function handlePrevQuestion() {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  }
+  function handleNextQuestion() {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  }
+
   if (isFinished) {
     const score = answers.reduce((acc, val, i) => {
       return val === questions[i].correct ? acc + 1 : acc;
@@ -53,14 +65,15 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-900 flex justify-center items-center  font-sans text-white ">
+      <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center  font-sans text-white ">
         <div className="flex flex-col justify-center items-center gap-10 w-[60%] h-auto p-8 bg-indigo-900 rounded-2xl">
           <div className=" flex items-center justify-center space-x-2 font-bold">
             {questions.map((_, index) => {
               const isAnswered = answers[index] !== null;
-              const isWrong = isAnswered && answers[index] !== questions[index].correct
+              const isWrong =
+                isAnswered && answers[index] !== questions[index].correct;
               return (
-                <Button
+                <ButtonNumbers
                   key={index}
                   content={index + 1}
                   onClick={() => setCurrentIndex(index)}
@@ -95,7 +108,12 @@ function App() {
               </div>
             </>
           )}
+            <div className="flex justify-between my-4 gap-28 w-full ">
+          <ButtonNextPrev content="Prev" onClick={() => handlePrevQuestion()} disabled={currentIndex === 0} />
+          <ButtonNextPrev content="Next" onClick={() => handleNextQuestion()} disabled={currentIndex === questions.length - 1}/>
         </div>
+        </div>
+      
       </div>
     </>
   );
