@@ -1,33 +1,14 @@
 import React from "react";
 import ButtonNumbers from "./Components/ButtonNumbers";
 import ButtonOptions from "./Components/ButtonOptions";
-import { getRandomOptions, shuffleArray } from "./utils/helpers";
 import Congratulations from "./Components/Congratulations";
 import ButtonNextPrev from "./Components/ButtonNextPrev";
+import useQuizData from "./hooks/useQuizData";
 function App() {
-  const [questions, setQuestions] = React.useState([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [answers, setAnswers] = React.useState(Array(10).fill(null));
   const [isFinished, setIsFinished] = React.useState(false);
-  React.useEffect(() => {
-    async function fetchData() {
-      const res = await fetch(
-        "https://restcountries.com/v3.1/all?fields=name,flags,capital,region"
-      );
-      const countries = await res.json();
-      const randomCountries = shuffleArray(countries).slice(0, 10);
-      const generatedQuestions = randomCountries.map((country) => {
-        const options = getRandomOptions(country, countries);
-        return {
-          flag: country.flags.svg,
-          correct: country.name.common,
-          options: shuffleArray(options),
-        };
-      });
-      setQuestions(generatedQuestions);
-    }
-    fetchData();
-  }, []);
+  const {questions, error, loading} = useQuizData(10);
 
   function handleAnswer(option) {
     const updated = [...answers];
@@ -55,7 +36,8 @@ function App() {
       setCurrentIndex(currentIndex + 1);
     }
   }
-
+  if(loading) return <p>Loading questions...</p>
+  if(error) return <p>Error: {error} </p>
   if (isFinished) {
     const score = answers.reduce((acc, val, i) => {
       return val === questions[i].correct ? acc + 1 : acc;
