@@ -4,11 +4,15 @@ import ButtonOptions from "./Components/ButtonOptions";
 import Congratulations from "./Components/Congratulations";
 import ButtonNextPrev from "./Components/ButtonNextPrev";
 import useQuizData from "./hooks/useQuizData";
+import QuizHeader from "./Components/QuizHeader";
+import QuizQuestion from "./Components/QuizQuestion";
+import QuizOptions from "./Components/QuizOptions";
+import QuizNavigation from "./Components/QuizNavigation";
 function App() {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [answers, setAnswers] = React.useState(Array(10).fill(null));
   const [isFinished, setIsFinished] = React.useState(false);
-  const {questions, error, loading} = useQuizData(10);
+  const { questions, error, loading } = useQuizData(10);
 
   function handleAnswer(option) {
     const updated = [...answers];
@@ -26,18 +30,10 @@ function App() {
     window.location.reload();
   }
 
-  function handlePrevQuestion() {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  }
-  function handleNextQuestion() {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  }
-  if(loading) return <p>Loading questions...</p>
-  if(error) return <p>Error: {error} </p>
+
+
+  if (loading) return <p>Loading questions...</p>;
+  if (error) return <p>Error: {error} </p>;
   if (isFinished) {
     const score = answers.reduce((acc, val, i) => {
       return val === questions[i].correct ? acc + 1 : acc;
@@ -49,53 +45,25 @@ function App() {
     <>
       <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center  font-sans text-white ">
         <div className="flex flex-col justify-center items-center gap-10 w-[60%] h-auto p-8 bg-indigo-900 rounded-2xl">
-          <div className=" flex items-center justify-center space-x-2 font-bold">
-            {questions.map((_, index) => {
-              const isAnswered = answers[index] !== null;
-              const isWrong =
-                isAnswered && answers[index] !== questions[index].correct;
-              return (
-                <ButtonNumbers
-                  key={index}
-                  content={index + 1}
-                  onClick={() => setCurrentIndex(index)}
-                  isActive={index === currentIndex}
-                  isAnswered={isAnswered}
-                  isWrong={isWrong}
-                />
-              );
-            })}
-          </div>
+          <QuizHeader
+            questions={questions}
+            answers={answers}
+            currentIndex={currentIndex}
+            onSelect={setCurrentIndex}
+          />
           {questions.length > 0 && (
             <>
-              <h1 className="text-2xl font-bold">
-                Qual o país dessa bandeira?
-              </h1>
-              <img
-                src={questions[currentIndex].flag}
-                alt="bandeira"
-                className="w-32 h-20 object-contain rounded"
+              <QuizQuestion flag={questions[currentIndex].flag} />
+              <QuizOptions
+                options={questions[currentIndex].options}
+                correct={questions[currentIndex].correct}
+                selected={answers[currentIndex]}
+                onAnswer={handleAnswer}
               />
-              <div className="grid grid-cols-2  gap-3 md:gap-6 ">
-                {questions[currentIndex].options.map((option, i) => (
-                  <ButtonOptions
-                    key={i}
-                    content={option}
-                    onClick={() => handleAnswer(option)}
-                    isSelected={answers[currentIndex] === option}
-                    isCorrect={option === questions[currentIndex].correct}
-                    disabled={answers[currentIndex] !== null}
-                  />
-                ))}
-              </div>
             </>
           )}
-            <div className="flex justify-between my-4  w-full ">
-          <ButtonNextPrev content="Prev" onClick={() => handlePrevQuestion()} disabled={currentIndex === 0} />
-          <ButtonNextPrev content="Next" onClick={() => handleNextQuestion()} disabled={currentIndex === questions.length - 1}/>
+          <QuizNavigation onPrev={() => setCurrentIndex((i) => Math.max(0, i -1))} onNext={() => setCurrentIndex((i) => Math.min(questions.length - 1, i + 1))} disablePrev={currentIndex === 0} disableNext={currentIndex === questions.length - 1}/>
         </div>
-        </div>
-      
       </div>
     </>
   );
